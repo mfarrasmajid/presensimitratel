@@ -32,10 +32,10 @@
         app:srcCompat="@drawable/logo_login" />
 
     <TextView
-        android:id="@+id/presensiLabel"
+        android:id="@+id/presensi_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="75dp"
         android:text="@string/app_name"
         android:textFontWeight="300"
         android:textSize="30sp"
@@ -43,5 +43,47 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+    <FrameLayout
+        android:id="@+id/login_btn"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/login_btn"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="4dp"
+        android:foreground="?selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/login_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/login"
+            android:textSize="20sp"
+            android:textColor="@color/colorWhite"/>
+
+        <ProgressBar
+            android:id="@+id/login_loading"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            />
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/login_reveal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:visibility="invisible"/>
+
+
 
 </android.support.constraint.ConstraintLayout>
