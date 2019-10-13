@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Presensi Mitratel v1.0</string>
+    <string name="app_name">Presensi Mitratel</string>
+    <string name="background_login_url_1">http://api.mitratel.co.id/rest/presensi/img/background_login.jpg</string>
+    <string name="background_login_url_2">https://live.staticflickr.com/65535/48885357391_e6c8eb643d_b.jpg</string>
 </resources>

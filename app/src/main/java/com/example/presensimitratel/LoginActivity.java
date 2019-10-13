@@ -14,24 +14,28 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // About StrictMode Learn More at => http://stackoverflow.com/questions/8258725/strict-mode-in-android-2-2
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        Bitmap myImage = getBitmapFromURL("http://api.mitratel.co.id/rest/presensi/img/background_login.jpg");
+        Bitmap myImage = getBitmapFromURL(getString(R.string.background_login_url_2));
 
-        ConstraintLayout rLayout=(ConstraintLayout)findViewById(R.id.login);
+        ConstraintLayout rLayout= findViewById(R.id.login);
 
         //BitmapDrawable(obj) convert Bitmap object into drawable object.
         Drawable dr = new BitmapDrawable(myImage);
         rLayout.setBackgroundDrawable(dr);
 
+        PulsatorLayout pulsatorLayout = findViewById(R.id.pulsator);
+        pulsatorLayout.start();
     }
 
     public Bitmap getBitmapFromURL(String imageUrl) {
