@@ -3,24 +3,34 @@ package com.example.presensimitratel;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,9 +41,14 @@ import java.net.URL;
 
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
+import com.example.presensimitratel.GlobalVar;
+
+import static android.service.autofill.Validators.or;
 import static android.view.View.VISIBLE;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private static GlobalVar globalVar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        Bitmap myImage = getBitmapFromURL(getString(R.string.background_login_url_2));
+        Bitmap myImage = getBitmapFromURL(getString(R.string.background_login_url_1));
 
         ConstraintLayout rLayout= findViewById(R.id.login);
 
@@ -54,14 +69,116 @@ public class LoginActivity extends AppCompatActivity {
         PulsatorLayout pulsatorLayout = findViewById(R.id.pulsator);
         pulsatorLayout.start();
 
+        globalVar = (GlobalVar) this.getApplication();
+        globalVar.setSomeVariable("1");
+
+        ImageView imageView = findViewById(R.id.logo);
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                if (v.equals(imageView)) {
+                    String s = globalVar.getSomeVariable();
+                    if (s == "1"){
+                        pulsatorLayout.stop();
+                        globalVar.setSomeVariable("0");
+                    } else {
+                        pulsatorLayout.start();
+                        globalVar.setSomeVariable("1");
+                    }
+                }
+            }
+        };
+        imageView.setOnClickListener(clickListener);
+
+        EditText form1 = findViewById(R.id.username);
+        EditText form2 = findViewById(R.id.password);
+
+        form1.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(s.length() == 0){
+                    TextInputLayout til = (TextInputLayout) findViewById(R.id.etUsernameLayout);
+                    til.setError("NIK tidak boleh kosong");
+                } else {
+                    TextInputLayout til = (TextInputLayout) findViewById(R.id.etUsernameLayout);
+                    til.setError(null);
+                }
+            }
+        });
+
+        form2.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(s.length() == 0){
+                    TextInputLayout til = (TextInputLayout) findViewById(R.id.etPasswordLayout);
+                    til.setError("Password tidak boleh kosong");
+                } else {
+                    TextInputLayout til = (TextInputLayout) findViewById(R.id.etPasswordLayout);
+                    til.setError(null);
+                }
+            }
+        });
+
         final FrameLayout login_btn = findViewById(R.id.login_btn);
         login_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                animateButtonWidth();
-                fadeOutTextAndShowProgressDialog();
-                nextAction();
+                EditText form1 = findViewById(R.id.username);
+                EditText form2 = findViewById(R.id.password);
+                String username = form1.getText().toString();
+                String password = form2.getText().toString();
+                if ((username.matches("")) || (password.matches(""))){
+                    if (username.matches("")){
+                        TextInputLayout til = (TextInputLayout) findViewById(R.id.etUsernameLayout);
+                        til.setError("NIK tidak boleh kosong");
+                    }
+                    if (password.matches("")){
+                        TextInputLayout til = (TextInputLayout) findViewById(R.id.etPasswordLayout);
+                        til.setError("Password tidak boleh kosong");
+                    }
+
+                } else {
+                    animateButtonWidth();
+                    fadeOutTextAndShowProgressDialog();
+                    nextAction();
+                }
             }
         });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
     }
 
     public Bitmap getBitmapFromURL(String imageUrl) {

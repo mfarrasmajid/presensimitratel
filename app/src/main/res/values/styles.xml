@@ -9,4 +9,11 @@
         <item name="android:fontFamily">@font/avenir</item>
     </style>
 
+    <style name="EditTextTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlNormal">@color/colorWhite</item>
+        <item name="colorControlActivated">@color/colorWhite</item>
+        <item name="colorControlHighlight">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
 </resources>
