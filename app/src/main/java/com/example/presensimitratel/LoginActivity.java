@@ -21,10 +21,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -40,20 +42,38 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import com.example.presensimitratel.GlobalVar;
+import com.example.presensimitratel.Model.GetLogin;
+import com.example.presensimitratel.Model.PostLogin;
+import com.example.presensimitratel.Rest.ApiClient;
+import com.example.presensimitratel.Rest.ApiInterface;
 
 import static android.service.autofill.Validators.or;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static GlobalVar globalVar;
+    ApiInterface mApiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPrefManager sharedPrefManager;
+        sharedPrefManager = new SharedPrefManager(this);
+        if (sharedPrefManager.getSPSudahLogin()){
+            startActivity(new Intent(LoginActivity.this, MainActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+            finish();
+        }
         setContentView(R.layout.activity_login);
+
+        mApiInterface = ApiClient.getClient(getString(R.string.api_client_1)).create(ApiInterface.class);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -141,6 +161,8 @@ public class LoginActivity extends AppCompatActivity {
         final FrameLayout login_btn = findViewById(R.id.login_btn);
         login_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                TextView error = findViewById(R.id.error_message);
+                error.setText("");
                 EditText form1 = findViewById(R.id.username);
                 EditText form2 = findViewById(R.id.password);
                 String username = form1.getText().toString();
@@ -158,7 +180,33 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     animateButtonWidth();
                     fadeOutTextAndShowProgressDialog();
-                    nextAction();
+                    Call<PostLogin> loginValidation = mApiInterface.postLogin(username, password);
+                    loginValidation.enqueue(new Callback<PostLogin>() {
+                        @Override
+                        public void onResponse(Call<PostLogin> call, Response<PostLogin> response) {
+                            Boolean status = response.body().getStatus();
+                            if (status){
+                                nextAction();
+                            } else {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideProgressDialog();
+                                        reverseAnimateButtonWidth();
+                                        fadeInTextAndShowProgressDialog();
+                                        String message = response.body().getMessage();
+                                        TextView error = findViewById(R.id.error_message);
+                                        error.setText(message);
+                                    }
+                                }, 500);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostLogin> call, Throwable t) {
+                            Log.e("Retrofit Post", t.toString());
+                        }
+                    });
                 }
             }
         });
@@ -213,6 +261,23 @@ public class LoginActivity extends AppCompatActivity {
         anim.start();
     }
 
+    private void reverseAnimateButtonWidth(){
+        final FrameLayout login_btn = findViewById(R.id.login_btn);
+        ValueAnimator anim = ValueAnimator.ofInt(login_btn.getMeasuredWidth(),(int) getResources().getDimension(R.dimen.login_btn_size));
+
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = login_btn.getLayoutParams();
+                layoutParams.width = val;
+                login_btn.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(250);
+        anim.start();
+    }
+
     private void fadeOutTextAndShowProgressDialog() {
         final TextView login_text = findViewById(R.id.login_text);
         login_text.animate().alpha(0f)
@@ -227,11 +292,35 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void fadeInTextAndShowProgressDialog() {
+        final TextView login_text = findViewById(R.id.login_text);
+        login_text.animate().alpha(1f)
+                .setDuration(250).start();
+
+    }
+
     private void showProgressDialog() {
-        final ProgressBar login_loading = findViewById(R.id.login_loading);
+        ProgressBar login_loading = findViewById(R.id.login_loading);
         login_loading.getIndeterminateDrawable()
                 .setColorFilter(Color.parseColor("#FFFFFF"),PorterDuff.Mode.SRC_IN);
+        login_loading.animate().alpha(1f).setDuration(100).start();
         login_loading.setVisibility(VISIBLE);
+    }
+
+    private void hideProgressDialog() {
+        ProgressBar login_loading = findViewById(R.id.login_loading);
+//        login_loading.animate().alpha(0f).setDuration(100).start();
+//        login_loading.setVisibility(View.GONE);
+        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f, 0f);
+        alphaAnim.setDuration (400);
+        login_loading.startAnimation(alphaAnim);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                login_loading.setVisibility(INVISIBLE);
+            }
+        }, 400);
+
     }
 
     private void nextAction() {
