@@ -5,5 +5,6 @@
     <string name="password_hint">Password</string>
     <string name="background_login_url_1">http://api.mitratel.co.id/rest/presensi/img/background_login.jpg</string>
     <string name="background_login_url_2">https://live.staticflickr.com/65535/48885357391_e6c8eb643d_b.jpg</string>
+    <string name="profile_image">https://presensi.mitratel.co.id/images/</string>
     <string name="api_client_1">http://api.mitratel.co.id/rest/presensi/ci/index.php/</string>
 </resources>

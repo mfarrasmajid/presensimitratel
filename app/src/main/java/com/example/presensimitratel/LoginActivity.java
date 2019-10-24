@@ -3,6 +3,7 @@ package com.example.presensimitratel;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.ActivityOptions;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
 
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 import retrofit2.Call;
@@ -47,6 +50,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.example.presensimitratel.GlobalVar;
+import com.example.presensimitratel.Model.DataUser;
 import com.example.presensimitratel.Model.GetLogin;
 import com.example.presensimitratel.Model.PostLogin;
 import com.example.presensimitratel.Rest.ApiClient;
@@ -67,8 +71,9 @@ public class LoginActivity extends AppCompatActivity {
         SharedPrefManager sharedPrefManager;
         sharedPrefManager = new SharedPrefManager(this);
         if (sharedPrefManager.getSPSudahLogin()){
-            startActivity(new Intent(LoginActivity.this, MainActivity.class)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+            //Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this).toBundle();
+            //startActivity(new Intent(LoginActivity.this, MainActivity.class), bundle);
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
         setContentView(R.layout.activity_login);
@@ -186,7 +191,39 @@ public class LoginActivity extends AppCompatActivity {
                         public void onResponse(Call<PostLogin> call, Response<PostLogin> response) {
                             Boolean status = response.body().getStatus();
                             if (status){
-                                nextAction();
+                                sharedPrefManager.saveSPBoolean(SharedPrefManager.SP_SUDAH_LOGIN, true);
+                                String nik_tg = response.body().getNIKTG();
+                                HashMap<String, String> params = new HashMap<>();
+                                params.put("nik_tg", nik_tg);
+                                Call<GetLogin> sessionData = mApiInterface.getLogin(params);
+                                sessionData.enqueue(new Callback<GetLogin>() {
+                                    @Override
+                                    public void onResponse(Call<GetLogin> call, Response<GetLogin> response2) {
+                                        Boolean status = response2.body().getStatus();
+                                        if (status) {
+                                            List<DataUser>  dataUser = response2.body().getListDataUser();
+                                            setSession(sharedPrefManager, dataUser);
+                                            nextAction();
+                                        } else {
+                                            hideProgressDialog();
+                                            reverseAnimateButtonWidth();
+                                            fadeInTextAndShowProgressDialog();
+                                            String message = response2.body().getMessage();
+                                            TextView error = findViewById(R.id.error_message);
+                                            error.setText(message);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<GetLogin> call, Throwable t) {
+                                        hideProgressDialog();
+                                        reverseAnimateButtonWidth();
+                                        fadeInTextAndShowProgressDialog();
+                                        String message = "System failure";
+                                        TextView error = findViewById(R.id.error_message);
+                                        error.setText(message);
+                                    }
+                                });
                             } else {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
@@ -373,9 +410,29 @@ public class LoginActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                //Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this).toBundle();
+                //startActivity(new Intent(LoginActivity.this, MainActivity.class), bundle);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }
         }, 100);
+    }
+
+    private void setSession(SharedPrefManager shared, List<DataUser> dataUser){
+        shared.saveSPString(SharedPrefManager.SP_NIK, dataUser.get(0).getNIK());
+        shared.saveSPString(SharedPrefManager.SP_NIK_TG, dataUser.get(0).getNIKTG());
+        shared.saveSPString(SharedPrefManager.SP_NAME, dataUser.get(0).getName());
+        shared.saveSPString(SharedPrefManager.SP_EMAIL, dataUser.get(0).getEmail());
+        shared.saveSPString(SharedPrefManager.SP_BAND, dataUser.get(0).getBand());
+        shared.saveSPString(SharedPrefManager.SP_UNIT, dataUser.get(0).getUnit());
+        shared.saveSPString(SharedPrefManager.SP_POSISI, dataUser.get(0).getPosisi());
+        shared.saveSPString(SharedPrefManager.SP_AREA, dataUser.get(0).getArea());
+        shared.saveSPString(SharedPrefManager.SP_KOTA, dataUser.get(0).getKota());
+        shared.saveSPString(SharedPrefManager.SP_ALAMAT, dataUser.get(0).getAlamat());
+        shared.saveSPString(SharedPrefManager.SP_TIMEZONE, dataUser.get(0).getTimezone());
+        shared.saveSPString(SharedPrefManager.SP_PRIVILEGE, dataUser.get(0).getPrivilege());
+        shared.saveSPString(SharedPrefManager.SP_MANAGER_CODE, dataUser.get(0).getManagerCode());
+        shared.saveSPString(SharedPrefManager.SP_VP_CODE, dataUser.get(0).getVPCode());
+        shared.saveSPString(SharedPrefManager.SP_EVP_CODE, dataUser.get(0).getEVPCode());
     }
 
     private int getFabWidth() {

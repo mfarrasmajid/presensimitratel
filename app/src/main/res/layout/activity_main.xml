@@ -6,13 +6,276 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- listview to display our stocks -->
-    <ListView
-        android:id="@+id/listView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:clickable="true"
+                    android:src="@drawable/logo_login"
+                    app:civ_border_color="#fff"
+                    app:civ_border_width="2dp" />
+
+                <TextView
+                    android:id="@+id/selamatDatang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_image"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="Selamat Datang Muhammad Farras Majid"
+                    android:textSize="23sp"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/tanggal"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/selamatDatang"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/colorBlack50"
+                    android:textColor="@color/colorWhite"
+                    android:text="Selasa, 15 Oktober 2019"
+                    android:gravity="center"
+                    android:textSize="20sp"/>
+
+                <LinearLayout
+                    android:id="@+id/absenBox"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tanggal">
+                    <RelativeLayout
+                        android:id="@+id/absenInBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/colorBlack20">
+                        <TextView
+                            android:id="@+id/jamIn"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:text="15:30"
+                            android:textSize="40sp"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"/>
+                        <TextView
+                            android:id="@+id/ipIn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="IP 192.168.101.40"
+                            android:textSize="15sp"
+                            android:textAlignment="center"
+                            android:layout_below="@+id/jamIn"
+                            android:layout_marginBottom="10dp"/>
+                        <LinearLayout
+                            android:id="@+id/miscIn"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ipIn"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp">
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="15dp"
+                                android:src="@drawable/nyaman"
+                                android:layout_weight="1" />
+                            <RelativeLayout
+                                android:layout_weight="7"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp">
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:src="@drawable/longlat" />
+                                <TextView
+                                    android:id="@+id/longLat"
+                                    android:layout_height="15dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_marginLeft="17dp"
+                                    android:textSize="10sp"
+                                    android:gravity="center_vertical"
+                                    android:text="6.20000 / 100.000" />
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_weight="4"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp">
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:src="@drawable/distance" />
+                                <TextView
+                                    android:id="@+id/distance"
+                                    android:layout_height="15dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_marginLeft="17dp"
+                                    android:textSize="10sp"
+                                    android:gravity="center_vertical"
+                                    android:text="1000km" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/absenOutBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_left">
+                        <TextView
+                            android:id="@+id/jamOut"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:text="--:--"
+                            android:textSize="40sp"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"/>
+                        <TextView
+                            android:id="@+id/ipOut"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="IP 192.168.101.40"
+                            android:textSize="15sp"
+                            android:textAlignment="center"
+                            android:layout_below="@+id/jamOut"
+                            android:layout_marginBottom="10dp"/>
+                        <LinearLayout
+                            android:id="@+id/miscOut"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ipOut"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp">
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="15dp"
+                                android:src="@drawable/nyaman"
+                                android:layout_weight="1" />
+                            <RelativeLayout
+                                android:layout_weight="7"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp">
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:src="@drawable/longlat" />
+                                <TextView
+                                    android:id="@+id/longLatOut"
+                                    android:layout_height="15dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_marginLeft="17dp"
+                                    android:textSize="10sp"
+                                    android:gravity="center_vertical"
+                                    android:text="6.20000 / 100.000" />
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_weight="4"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp">
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:src="@drawable/distance" />
+                                <TextView
+                                    android:id="@+id/distanceOut"
+                                    android:layout_height="15dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_marginLeft="17dp"
+                                    android:textSize="10sp"
+                                    android:gravity="center_vertical"
+                                    android:text="1000km" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/ketTag"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/absenBox"
+                    android:background="@color/colorBlack50"
+                    android:textColor="@color/colorWhite"
+                    android:text="Keterangan Absen"
+                    android:gravity="center"
+                    android:textSize="20sp"/>
+                <FrameLayout
+                    android:id="@+id/keteranganFrame"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/ketTag"
+                    android:background="@color/colorRed"
+                    >
+
+                    <TextView
+                        android:id="@+id/keterangan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:textColor="@color/colorWhite"
+                        android:gravity="center"
+                        android:text=""
+                        android:textSize="15sp"/>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/dataLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Data Karyawan"
+                    android:layout_below="@+id/keteranganFrame"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"/>
+
+                <ListView
+                    android:id="@+id/dataKaryawan"
+                    android:layout_below="@+id/dataLabel"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+
+                </ListView>
+
+                <TextView
+                    android:id="@+id/errorLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </android.support.constraint.ConstraintLayout>
