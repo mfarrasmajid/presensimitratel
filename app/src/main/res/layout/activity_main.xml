@@ -24,6 +24,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
 
+                <RelativeLayout
+                    android:id="@+id/backgroundMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
                     android:layout_width="150dp"
@@ -32,7 +37,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:clickable="true"
-                    android:src="@drawable/logo_login"
+                    android:src="@drawable/def_user"
                     app:civ_border_color="#fff"
                     app:civ_border_width="2dp" />
 
@@ -44,20 +49,21 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
+                    android:layout_marginBottom="30dp"
                     android:textColor="@color/colorPrimaryDark"
-                    android:text="Selamat Datang Muhammad Farras Majid"
+                    android:text="Selamat Datang"
                     android:textSize="23sp"
                     android:textAlignment="center" />
 
+                </RelativeLayout>
                 <TextView
                     android:id="@+id/tanggal"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_below="@id/selamatDatang"
-                    android:layout_marginTop="30dp"
+                    android:layout_below="@id/backgroundMain"
                     android:background="@color/colorBlack50"
                     android:textColor="@color/colorWhite"
-                    android:text="Selasa, 15 Oktober 2019"
+                    android:text="Senin, 1 Januari 1990"
                     android:gravity="center"
                     android:textSize="20sp"/>
 
@@ -77,7 +83,7 @@
                             android:id="@+id/jamIn"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
-                            android:text="15:30"
+                            android:text="--:--"
                             android:textSize="40sp"
                             android:textAlignment="center"
                             android:layout_marginTop="10dp"/>
@@ -85,7 +91,7 @@
                             android:id="@+id/ipIn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="IP 192.168.101.40"
+                            android:text="IP 127.0.0.1"
                             android:textSize="15sp"
                             android:textAlignment="center"
                             android:layout_below="@+id/jamIn"
@@ -100,6 +106,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp">
                             <ImageView
+                                android:id="@+id/emojiIn"
                                 android:layout_width="0dp"
                                 android:layout_height="15dp"
                                 android:src="@drawable/nyaman"
@@ -114,16 +121,16 @@
                                     android:layout_height="15dp"
                                     android:src="@drawable/longlat" />
                                 <TextView
-                                    android:id="@+id/longLat"
+                                    android:id="@+id/longLatIn"
                                     android:layout_height="15dp"
                                     android:layout_width="wrap_content"
                                     android:layout_marginLeft="17dp"
-                                    android:textSize="10sp"
+                                    android:textSize="9sp"
                                     android:gravity="center_vertical"
-                                    android:text="6.20000 / 100.000" />
+                                    android:text="- / -" />
                             </RelativeLayout>
                             <RelativeLayout
-                                android:layout_weight="4"
+                                android:layout_weight="3"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp">
@@ -132,13 +139,13 @@
                                     android:layout_height="15dp"
                                     android:src="@drawable/distance" />
                                 <TextView
-                                    android:id="@+id/distance"
+                                    android:id="@+id/distanceIn"
                                     android:layout_height="15dp"
                                     android:layout_width="wrap_content"
                                     android:layout_marginLeft="17dp"
-                                    android:textSize="10sp"
+                                    android:textSize="9sp"
                                     android:gravity="center_vertical"
-                                    android:text="1000km" />
+                                    android:text="-" />
                             </RelativeLayout>
                         </LinearLayout>
                     </RelativeLayout>
@@ -160,7 +167,7 @@
                             android:id="@+id/ipOut"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="IP 192.168.101.40"
+                            android:text="IP 127.0.0.1"
                             android:textSize="15sp"
                             android:textAlignment="center"
                             android:layout_below="@+id/jamOut"
@@ -175,6 +182,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp">
                             <ImageView
+                                android:id="@+id/emojiOut"
                                 android:layout_width="0dp"
                                 android:layout_height="15dp"
                                 android:src="@drawable/nyaman"
@@ -193,12 +201,12 @@
                                     android:layout_height="15dp"
                                     android:layout_width="wrap_content"
                                     android:layout_marginLeft="17dp"
-                                    android:textSize="10sp"
+                                    android:textSize="9sp"
                                     android:gravity="center_vertical"
-                                    android:text="6.20000 / 100.000" />
+                                    android:text="- / -" />
                             </RelativeLayout>
                             <RelativeLayout
-                                android:layout_weight="4"
+                                android:layout_weight="3"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp">
@@ -211,9 +219,9 @@
                                     android:layout_height="15dp"
                                     android:layout_width="wrap_content"
                                     android:layout_marginLeft="17dp"
-                                    android:textSize="10sp"
+                                    android:textSize="9sp"
                                     android:gravity="center_vertical"
-                                    android:text="1000km" />
+                                    android:text="-" />
                             </RelativeLayout>
                         </LinearLayout>
                     </RelativeLayout>
@@ -233,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:layout_below="@id/ketTag"
-                    android:background="@color/colorRed"
+                    android:background="@color/colorBlue"
                     >
 
                     <TextView
@@ -267,6 +275,23 @@
                     android:layout_width="match_parent">
 
                 </ListView>
+
+                <TextView
+                    android:id="@+id/monitoringLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Monitoring Bawahan"
+                    android:layout_below="@+id/dataKaryawan"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/monitoringBawahan"
+                    android:scrollbars="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/monitoringLabel"/>
 
                 <TextView
                     android:id="@+id/errorLog"

@@ -1,5 +1,6 @@
 package com.example.presensimitratel.Rest;
 
+import com.example.presensimitratel.Model.GetAbsenData;
 import com.example.presensimitratel.Model.GetLogin;
 import com.example.presensimitratel.Model.PostLogin;
 
@@ -19,5 +20,7 @@ public interface ApiInterface {
     @POST("api/login")
     Call<PostLogin> postLogin(@Field("username") String username,
                               @Field("password") String password);
+    @GET("api/absendata")
+    Call<GetAbsenData> getAbsenData(@QueryMap HashMap<String, String> params);
 
 }

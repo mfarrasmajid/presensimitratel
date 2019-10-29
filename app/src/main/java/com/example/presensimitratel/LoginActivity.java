@@ -78,18 +78,27 @@ public class LoginActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_login);
 
+        if (sharedPrefManager.getSPNIKTG() != null){
+            EditText username = findViewById(R.id.username);
+            username.setText(sharedPrefManager.getSPNIKTG());
+        }
+
         mApiInterface = ApiClient.getClient(getString(R.string.api_client_1)).create(ApiInterface.class);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        ConstraintLayout rLayout= findViewById(R.id.login);
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.background_login);
+
+        Drawable dr = new BitmapDrawable(icon);
+        rLayout.setBackgroundDrawable(dr);
         Bitmap myImage = getBitmapFromURL(getString(R.string.background_login_url_1));
 
-        ConstraintLayout rLayout= findViewById(R.id.login);
-
         //BitmapDrawable(obj) convert Bitmap object into drawable object.
-        Drawable dr = new BitmapDrawable(myImage);
-        rLayout.setBackgroundDrawable(dr);
+        Drawable dr2 = new BitmapDrawable(myImage);
+        rLayout.setBackgroundDrawable(dr2);
 
         PulsatorLayout pulsatorLayout = findViewById(R.id.pulsator);
         pulsatorLayout.start();
