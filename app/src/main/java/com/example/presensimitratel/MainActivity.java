@@ -16,6 +16,9 @@ import android.os.Bundle;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -33,10 +36,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.presensimitratel.Adapter.DataKaryawanAdapter;
+import com.example.presensimitratel.Adapter.MonitoringAdapter;
+import com.example.presensimitratel.Adapter.UlangTahunAdapter;
 import com.example.presensimitratel.Model.DataAbsen;
+import com.example.presensimitratel.Model.DataMonitoring;
+import com.example.presensimitratel.Model.DataUlangTahun;
 import com.example.presensimitratel.Model.DataUser;
 import com.example.presensimitratel.Model.GetAbsenData;
 import com.example.presensimitratel.Model.GetLogin;
+import com.example.presensimitratel.Model.GetMonitoring;
+import com.example.presensimitratel.Model.GetUlangTahun;
 import com.example.presensimitratel.Rest.ApiClient;
 import com.example.presensimitratel.Rest.ApiInterface;
 
@@ -54,6 +63,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,11 +72,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     ApiInterface mApiInterface;
+    List<DataMonitoring> monitoringList = new ArrayList<>();
+    RecyclerView monitoringBawahan;
+    MonitoringAdapter monitoringAdapter;
+    List<DataUlangTahun> ulangTahunList = new ArrayList<>();
+    RecyclerView ulangTahun;
+    UlangTahunAdapter ulangTahunAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
 
         retrieveAbsenData(sharedPrefManager);
         retrieveKaryawanData(sharedPrefManager);
+        retrieveMonitoringData(sharedPrefManager);
+        retrieveUlangTahunData(sharedPrefManager);
 
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.pullToRefresh);
         swipeRefreshLayout.setOnRefreshListener(
@@ -109,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onRefresh() {
                         animateElement();
                         retrieveAbsenData(sharedPrefManager);
+                        retrieveKaryawanData(sharedPrefManager);
+                        retrieveMonitoringData(sharedPrefManager);
+                        retrieveUlangTahunData(sharedPrefManager);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
@@ -118,31 +142,31 @@ public class MainActivity extends AppCompatActivity {
     public void animateElement(){
         final Animation slideUp = AnimationUtils.loadAnimation(this,R.anim.slide_up);
         CircleImageView element1 = findViewById(R.id.profile_image);
-        element1.setVisibility(View.INVISIBLE);
+        element1.setVisibility(INVISIBLE);
         TextView element2 = findViewById(R.id.selamatDatang);
-        element2.setVisibility(View.INVISIBLE);
+        element2.setVisibility(INVISIBLE);
         TextView element3 = findViewById(R.id.tanggal);
-        element3.setVisibility(View.INVISIBLE);
+        element3.setVisibility(INVISIBLE);
         TextView element4 = findViewById(R.id.jamIn);
-        element4.setVisibility(View.INVISIBLE);
+        element4.setVisibility(INVISIBLE);
         TextView element5 = findViewById(R.id.jamOut);
-        element5.setVisibility(View.INVISIBLE);
+        element5.setVisibility(INVISIBLE);
         TextView element6 = findViewById(R.id.ipIn);
-        element6.setVisibility(View.INVISIBLE);
+        element6.setVisibility(INVISIBLE);
         TextView element7 = findViewById(R.id.ipOut);
-        element7.setVisibility(View.INVISIBLE);
+        element7.setVisibility(INVISIBLE);
         LinearLayout element8 = findViewById(R.id.miscIn);
-        element8.setVisibility(View.INVISIBLE);
+        element8.setVisibility(INVISIBLE);
         LinearLayout element9 = findViewById(R.id.miscOut);
-        element9.setVisibility(View.INVISIBLE);
+        element9.setVisibility(INVISIBLE);
         TextView element10 = findViewById(R.id.ketTag);
-        element10.setVisibility(View.INVISIBLE);
+        element10.setVisibility(INVISIBLE);
         FrameLayout element11 = findViewById(R.id.keteranganFrame);
-        element11.setVisibility(View.INVISIBLE);
+        element11.setVisibility(INVISIBLE);
         TextView element12 = findViewById(R.id.dataLabel);
-        element12.setVisibility(View.INVISIBLE);
+        element12.setVisibility(INVISIBLE);
         ListView element13 = findViewById(R.id.dataKaryawan);
-        element13.setVisibility(View.INVISIBLE);
+        element13.setVisibility(INVISIBLE);
 
         final Context context = MainActivity.this;
 
@@ -150,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element1.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element1.setVisibility(View.VISIBLE);
+                element1.setVisibility(VISIBLE);
             }
         }, 50);
 
@@ -158,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element2.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element2.setVisibility(View.VISIBLE);
+                element2.setVisibility(VISIBLE);
             }
         }, 100);
 
@@ -166,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element3.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element3.setVisibility(View.VISIBLE);
+                element3.setVisibility(VISIBLE);
             }
         }, 150);
 
@@ -174,9 +198,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element4.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element4.setVisibility(View.VISIBLE);
+                element4.setVisibility(VISIBLE);
                 element5.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element5.setVisibility(View.VISIBLE);
+                element5.setVisibility(VISIBLE);
             }
         }, 200);
 
@@ -184,9 +208,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element6.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element6.setVisibility(View.VISIBLE);
+                element6.setVisibility(VISIBLE);
                 element7.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element7.setVisibility(View.VISIBLE);
+                element7.setVisibility(VISIBLE);
             }
         }, 250);
 
@@ -194,9 +218,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element8.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element8.setVisibility(View.VISIBLE);
+                element8.setVisibility(VISIBLE);
                 element9.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element9.setVisibility(View.VISIBLE);
+                element9.setVisibility(VISIBLE);
             }
         }, 300);
 
@@ -204,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element10.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element10.setVisibility(View.VISIBLE);
+                element10.setVisibility(VISIBLE);
             }
         }, 350);
 
@@ -212,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element11.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element11.setVisibility(View.VISIBLE);
+                element11.setVisibility(VISIBLE);
             }
         }, 400);
 
@@ -220,9 +244,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 element12.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element12.setVisibility(View.VISIBLE);
+                element12.setVisibility(VISIBLE);
                 element13.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up));
-                element13.setVisibility(View.VISIBLE);
+                element13.setVisibility(VISIBLE);
             }
         }, 450);
     }
@@ -396,6 +420,78 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetAbsenData> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+    public void retrieveMonitoringData (SharedPrefManager sharedPrefManager){
+        monitoringBawahan = (RecyclerView) findViewById(R.id.monitoringBawahan);
+
+        RecyclerView.LayoutManager mLayoutManager =
+                new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        monitoringBawahan.setLayoutManager(mLayoutManager);
+        monitoringBawahan.setItemAnimator(new DefaultItemAnimator());
+
+        String nik_tg = sharedPrefManager.getSPNIKTG();
+        mApiInterface = ApiClient.getClient(getString(R.string.api_client_1)).create(ApiInterface.class);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("nik_tg", nik_tg);
+        Call<GetMonitoring> apiData = mApiInterface.getMonitoring(params);
+        apiData.enqueue(new Callback<GetMonitoring>() {
+            @Override
+            public void onResponse(Call<GetMonitoring> call, Response<GetMonitoring> response) {
+                Boolean status = response.body().getStatus();
+                if (status) {
+                    TextView monitoringLabel = findViewById(R.id.monitoringLabel);
+                    monitoringLabel.setVisibility(VISIBLE);
+                    monitoringList = response.body().getListDataMonitoring();
+                    monitoringAdapter = new MonitoringAdapter(monitoringList);
+                    monitoringBawahan.setAdapter(monitoringAdapter);
+//                    monitoringAdapter.notifyDataSetChanged();
+                } else {
+                    TextView monitoringLabel = findViewById(R.id.monitoringLabel);
+                    monitoringLabel.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetMonitoring> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+    public void retrieveUlangTahunData (SharedPrefManager sharedPrefManager){
+        ulangTahun = (RecyclerView) findViewById(R.id.ulangTahun);
+
+        RecyclerView.LayoutManager mLayoutManager =
+                new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        ulangTahun.setLayoutManager(mLayoutManager);
+        ulangTahun.setItemAnimator(new DefaultItemAnimator());
+
+        mApiInterface = ApiClient.getClient(getString(R.string.api_client_1)).create(ApiInterface.class);
+        HashMap<String, String> params = new HashMap<>();
+        Call<GetUlangTahun> apiData = mApiInterface.getUlangTahun(params);
+        apiData.enqueue(new Callback<GetUlangTahun>() {
+            @Override
+            public void onResponse(Call<GetUlangTahun> call, Response<GetUlangTahun> response) {
+                Boolean status = response.body().getStatus();
+                if (status) {
+                    TextView ulangTahunLabel = findViewById(R.id.ulangTahunLabel);
+                    ulangTahunLabel.setVisibility(VISIBLE);
+                    ulangTahunList = response.body().getListDataUlangTahun();
+                    ulangTahunAdapter = new UlangTahunAdapter(ulangTahunList);
+                    ulangTahun.setAdapter(ulangTahunAdapter);
+//                    monitoringAdapter.notifyDataSetChanged();
+                } else {
+                    TextView ulangTahunLabel = findViewById(R.id.ulangTahunLabel);
+                    ulangTahunLabel.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetUlangTahun> call, Throwable t) {
                 Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG);
             }
         });

@@ -18,22 +18,22 @@
             android:id="@+id/dataLabel"
             android:text="NIK TG"
             android:layout_width="80dp"
-            android:layout_height="60dp"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:textSize="17sp"
+            android:textSize="15sp"
             android:layout_marginLeft="20dp" />
         <FrameLayout
             android:id="@+id/dataFrame"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="40dp"
             android:background="@drawable/border_left_data" >
             <TextView
                 android:id="@+id/data"
                 android:text="NIK"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:layout_marginLeft="20dp" />
         </FrameLayout>
     </LinearLayout>
