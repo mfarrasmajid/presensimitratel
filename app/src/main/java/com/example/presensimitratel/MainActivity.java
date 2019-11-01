@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,11 +20,13 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.LruCache;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,14 +43,17 @@ import com.example.presensimitratel.Adapter.MonitoringAdapter;
 import com.example.presensimitratel.Adapter.UlangTahunAdapter;
 import com.example.presensimitratel.Model.DataAbsen;
 import com.example.presensimitratel.Model.DataMonitoring;
+import com.example.presensimitratel.Model.DataStatus;
 import com.example.presensimitratel.Model.DataUlangTahun;
 import com.example.presensimitratel.Model.DataUser;
 import com.example.presensimitratel.Model.GetAbsenData;
+import com.example.presensimitratel.Model.GetAbsenStatus;
 import com.example.presensimitratel.Model.GetLogin;
 import com.example.presensimitratel.Model.GetMonitoring;
 import com.example.presensimitratel.Model.GetUlangTahun;
 import com.example.presensimitratel.Rest.ApiClient;
 import com.example.presensimitratel.Rest.ApiInterface;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,6 +78,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
@@ -120,25 +127,28 @@ public class MainActivity extends AppCompatActivity {
 
         retrieveAbsenData(sharedPrefManager);
         retrieveKaryawanData(sharedPrefManager);
+        retrievePrivilege(sharedPrefManager);
         retrieveMonitoringData(sharedPrefManager);
         retrieveUlangTahunData(sharedPrefManager);
+        retrieveAbsenStatus(sharedPrefManager);
 
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.pullToRefresh);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        animateElement();
+//                        animateElement();
                         retrieveAbsenData(sharedPrefManager);
                         retrieveKaryawanData(sharedPrefManager);
+                        retrievePrivilege(sharedPrefManager);
                         retrieveMonitoringData(sharedPrefManager);
                         retrieveUlangTahunData(sharedPrefManager);
+                        retrieveAbsenStatus(sharedPrefManager);
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }
         );
     }
-
     public void animateElement(){
         final Animation slideUp = AnimationUtils.loadAnimation(this,R.anim.slide_up);
         CircleImageView element1 = findViewById(R.id.profile_image);
@@ -277,11 +287,99 @@ public class MainActivity extends AppCompatActivity {
         try{
             Bitmap myImage = getBitmapFromURL(getString(R.string.profile_image).concat(nik).concat(".jpg"));
             if (myImage != null){
-                profileImage.setImageBitmap(myImage);
+//                profileImage.setImageBitmap(myImage);
+                Picasso.get().load(getString(R.string.profile_image).concat(nik).concat(".jpg")).resize(150,150).into(profileImage);
             }
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+    public void retrieveAbsenStatus (SharedPrefManager sharedPrefManager){
+        String nik_tg = sharedPrefManager.getSPNIKTG();
+        mApiInterface = ApiClient.getClient(getString(R.string.api_client_1)).create(ApiInterface.class);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("nik_tg", nik_tg);
+        Call<GetAbsenStatus> apiData = mApiInterface.getAbsenStatus(params);
+        apiData.enqueue(new Callback<GetAbsenStatus>() {
+            @Override
+            public void onResponse(Call<GetAbsenStatus> call, Response<GetAbsenStatus> response) {
+                Boolean status = response.body().getStatus();
+                if (status){
+                    List<DataStatus> dataStatusList = response.body().getListDataStatus();
+                    TextView tanggal = findViewById(R.id.tanggal);
+                    tanggal.setText(dataStatusList.get(0).getDateLong());
+                    Button absenButton = findViewById(R.id.absenButton);
+                    if (dataStatusList.get(0).getColor1() != null){
+                        if (dataStatusList.get(0).getColor1().equals("Red")){
+                            absenButton.setBackground(getDrawable(R.drawable.ripple_red));
+                        } else if (dataStatusList.get(0).getColor1().equals("Blue")){
+                            absenButton.setBackground(getDrawable(R.drawable.ripple_blue));
+                        } else if (dataStatusList.get(0).getColor1().equals("Green")){
+                            absenButton.setBackground(getDrawable(R.drawable.non_ripple_green));
+                        } else {
+                            absenButton.setBackground(getDrawable(R.drawable.non_ripple_green));
+                        }
+                    } else {
+                        absenButton.setBackground(getDrawable(R.drawable.non_ripple_green));
+                    }
+                    if (dataStatusList.get(0).getClickable() != null){
+                        if (dataStatusList.get(0).getClickable().equals("1")){
+                            absenButton.setEnabled(true);
+                        } else if (dataStatusList.get(0).getClickable().equals("0")){
+                            absenButton.setEnabled(false);
+                        } else {
+                            absenButton.setEnabled(false);
+                        }
+                    } else {
+                        absenButton.setEnabled(false);
+                    }
+                    if (dataStatusList.get(0).getNote() != null){
+                        absenButton.setText(dataStatusList.get(0).getNote());
+                    } else {
+                        absenButton.setText("Selamat Istirahat");
+                    }
+                } else {
+                    List<DataStatus> dataStatusList = response.body().getListDataStatus();
+                    TextView tanggal = findViewById(R.id.tanggal);
+                    tanggal.setText(dataStatusList.get(0).getDateLong());
+                    Button absenButton = findViewById(R.id.absenButton);
+                    if (dataStatusList.get(0).getColor1() != null){
+                        if (dataStatusList.get(0).getColor1().equals("Red")){
+                            absenButton.setBackground(getDrawable(R.drawable.ripple_red));
+                        } else if (dataStatusList.get(0).getColor1().equals("Blue")){
+                            absenButton.setBackground(getDrawable(R.drawable.ripple_blue));
+                        } else if (dataStatusList.get(0).getColor1().equals("Green")){
+                            absenButton.setBackground(getDrawable(R.drawable.non_ripple_green));
+                        } else {
+                            absenButton.setBackground(getDrawable(R.drawable.non_ripple_green));
+                        }
+                    } else {
+                        absenButton.setBackground(getDrawable(R.drawable.non_ripple_green));
+                    }
+                    if (dataStatusList.get(0).getClickable() != null){
+                        if (dataStatusList.get(0).getClickable().equals("1")){
+                            absenButton.setEnabled(true);
+                        } else if (dataStatusList.get(0).getClickable().equals("0")){
+                            absenButton.setEnabled(false);
+                        } else {
+                            absenButton.setEnabled(false);
+                        }
+                    } else {
+                        absenButton.setEnabled(false);
+                    }
+                    if (dataStatusList.get(0).getNote() != null){
+                        absenButton.setText(dataStatusList.get(0).getNote());
+                    } else {
+                        absenButton.setText("Selamat Istirahat");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAbsenStatus> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG);
+            }
+        });
     }
 
     public void retrieveAbsenData(SharedPrefManager sharedPrefManager){
@@ -425,6 +523,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void retrievePrivilege (SharedPrefManager sharedPrefManager){
+        String privilege = sharedPrefManager.getSPPrivilege();
+        TextView monitoringLabel = findViewById(R.id.monitoringLabel);
+        if (privilege != null){
+            if (privilege.equals("MGR") || privilege.equals("VP") || privilege.equals("EVP")){
+                monitoringLabel.setVisibility(VISIBLE);
+            } else {
+                monitoringLabel.setVisibility(GONE);
+            }
+        } else {
+            monitoringLabel.setVisibility(GONE);
+        }
+    }
+
     public void retrieveMonitoringData (SharedPrefManager sharedPrefManager){
         monitoringBawahan = (RecyclerView) findViewById(R.id.monitoringBawahan);
 
@@ -443,15 +555,13 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<GetMonitoring> call, Response<GetMonitoring> response) {
                 Boolean status = response.body().getStatus();
                 if (status) {
-                    TextView monitoringLabel = findViewById(R.id.monitoringLabel);
-                    monitoringLabel.setVisibility(VISIBLE);
                     monitoringList = response.body().getListDataMonitoring();
                     monitoringAdapter = new MonitoringAdapter(monitoringList);
                     monitoringBawahan.setAdapter(monitoringAdapter);
 //                    monitoringAdapter.notifyDataSetChanged();
                 } else {
                     TextView monitoringLabel = findViewById(R.id.monitoringLabel);
-                    monitoringLabel.setVisibility(View.GONE);
+                    monitoringLabel.setVisibility(GONE);
                 }
             }
 
@@ -486,7 +596,7 @@ public class MainActivity extends AppCompatActivity {
 //                    monitoringAdapter.notifyDataSetChanged();
                 } else {
                     TextView ulangTahunLabel = findViewById(R.id.ulangTahunLabel);
-                    ulangTahunLabel.setVisibility(View.GONE);
+                    ulangTahunLabel.setVisibility(GONE);
                 }
             }
 

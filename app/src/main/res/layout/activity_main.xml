@@ -295,7 +295,7 @@
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/monitoringBawahan"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/monitoringLabel"/>
 
@@ -311,7 +311,7 @@
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/ulangTahun"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/ulangTahunLabel"/>
 
@@ -329,13 +329,13 @@
             android:layout_height="70dp"
             app:layout_constraintTop_toTopOf="parent">
             <Button
-                android:id="@+id/my_sticky_button"
+                android:id="@+id/absenButton"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:text="Absen Masuk"
                 android:textColor="@color/colorWhite"
-                android:background="@color/colorBlue"
+                android:background="@drawable/ripple_blue"
                 android:fitsSystemWindows="true"
                 android:layout_gravity="center_horizontal|bottom"
                 />

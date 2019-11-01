@@ -1,6 +1,7 @@
 package com.example.presensimitratel.Rest;
 
 import com.example.presensimitratel.Model.GetAbsenData;
+import com.example.presensimitratel.Model.GetAbsenStatus;
 import com.example.presensimitratel.Model.GetLogin;
 import com.example.presensimitratel.Model.GetMonitoring;
 import com.example.presensimitratel.Model.GetUlangTahun;
@@ -28,5 +29,7 @@ public interface ApiInterface {
     Call<GetMonitoring> getMonitoring(@QueryMap HashMap<String, String> params);
     @GET("api/ulangtahun")
     Call<GetUlangTahun> getUlangTahun(@QueryMap HashMap<String, String> params);
+    @GET("api/absenstatus")
+    Call<GetAbsenStatus> getAbsenStatus(@QueryMap HashMap<String, String> params);
 
 }

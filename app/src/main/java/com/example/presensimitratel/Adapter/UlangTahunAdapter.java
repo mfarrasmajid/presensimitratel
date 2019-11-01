@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.presensimitratel.Model.DataUlangTahun;
 import com.example.presensimitratel.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +56,8 @@ public class UlangTahunAdapter extends RecyclerView.Adapter<UlangTahunAdapter.My
             String url = holder.itemView.getResources().getString(R.string.profile_image) + ulangtahun.getNIK() + ".jpg";
             Bitmap myImage = getBitmapFromURL(url);
             if (myImage != null){
-                holder.nik.setImageBitmap(myImage);
+//                holder.nik.setImageBitmap(myImage);
+                Picasso.get().load(url).resize(150,150).into(holder.nik);
             }
         }
         if (ulangtahun.getName() != null){

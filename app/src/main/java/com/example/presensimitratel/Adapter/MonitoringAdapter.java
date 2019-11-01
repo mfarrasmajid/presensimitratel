@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.presensimitratel.Model.DataMonitoring;
 import com.example.presensimitratel.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +57,8 @@ public class MonitoringAdapter extends RecyclerView.Adapter<MonitoringAdapter.My
         String url = holder.itemView.getResources().getString(R.string.profile_image) + monitoring.getNIK() + ".jpg";
         Bitmap myImage = getBitmapFromURL(url);
         if (myImage != null){
-            holder.nik_tg.setImageBitmap(myImage);
+//            holder.nik_tg.setImageBitmap(myImage);
+            Picasso.get().load(url).resize(150,150).into(holder.nik_tg);
         }
         holder.name.setText(monitoring.getName());
         String time, time_in;
