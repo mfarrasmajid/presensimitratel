@@ -1,5 +1,6 @@
 package com.example.presensimitratel;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
     List<DataUlangTahun> ulangTahunList = new ArrayList<>();
     RecyclerView ulangTahun;
     UlangTahunAdapter ulangTahunAdapter;
+    private Activity activity;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +110,10 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
 
-        animateElement();
+        activity = this;
+        context = this;
+
+//        animateElement();
 
         CircleImageView profileImage= findViewById(R.id.profile_image);
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +137,20 @@ public class MainActivity extends AppCompatActivity {
         retrieveMonitoringData(sharedPrefManager);
         retrieveUlangTahunData(sharedPrefManager);
         retrieveAbsenStatus(sharedPrefManager);
+
+        Button absenButton= findViewById(R.id.absenButton);
+        absenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                //Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle();
+                //startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK), bundle);
+                //startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                startActivity(new Intent(context, AbsenActivity.class),
+                        ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+                finish();
+            }
+        });
 
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.pullToRefresh);
         swipeRefreshLayout.setOnRefreshListener(
@@ -285,11 +305,11 @@ public class MainActivity extends AppCompatActivity {
 
         CircleImageView profileImage= findViewById(R.id.profile_image);
         try{
-            Bitmap myImage = getBitmapFromURL(getString(R.string.profile_image).concat(nik).concat(".jpg"));
-            if (myImage != null){
+//            Bitmap myImage = getBitmapFromURL(getString(R.string.profile_image).concat(nik).concat(".jpg"));
+//            if (myImage != null){
 //                profileImage.setImageBitmap(myImage);
-                Picasso.get().load(getString(R.string.profile_image).concat(nik).concat(".jpg")).resize(150,150).into(profileImage);
-            }
+                Picasso.get().load(getString(R.string.profile_image).concat(nik).concat(".jpg")).placeholder(R.drawable.def_user).error(R.drawable.def_user).resize(300,300).into(profileImage);
+//            }
         } catch (Exception e){
             e.printStackTrace();
         }

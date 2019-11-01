@@ -55,11 +55,11 @@ public class MonitoringAdapter extends RecyclerView.Adapter<MonitoringAdapter.My
     public void onBindViewHolder(MyViewHolder holder, int position) {
         DataMonitoring monitoring = monitoringList.get(position);
         String url = holder.itemView.getResources().getString(R.string.profile_image) + monitoring.getNIK() + ".jpg";
-        Bitmap myImage = getBitmapFromURL(url);
-        if (myImage != null){
+//        Bitmap myImage = getBitmapFromURL(url);
+//        if (myImage != null){
 //            holder.nik_tg.setImageBitmap(myImage);
-            Picasso.get().load(url).resize(150,150).into(holder.nik_tg);
-        }
+            Picasso.get().load(url).resize(300,300).placeholder(R.drawable.def_user).error(R.drawable.def_user).into(holder.nik_tg);
+//        }
         holder.name.setText(monitoring.getName());
         String time, time_in;
         if (monitoring.getDatetimeIn() != null){

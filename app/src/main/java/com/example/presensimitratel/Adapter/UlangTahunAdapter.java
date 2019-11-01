@@ -54,11 +54,11 @@ public class UlangTahunAdapter extends RecyclerView.Adapter<UlangTahunAdapter.My
         DataUlangTahun ulangtahun = ulangTahunList.get(position);
         if (ulangtahun.getNIK() != null){
             String url = holder.itemView.getResources().getString(R.string.profile_image) + ulangtahun.getNIK() + ".jpg";
-            Bitmap myImage = getBitmapFromURL(url);
-            if (myImage != null){
+//            Bitmap myImage = getBitmapFromURL(url);
+//            if (myImage != null){
 //                holder.nik.setImageBitmap(myImage);
-                Picasso.get().load(url).resize(150,150).into(holder.nik);
-            }
+                Picasso.get().load(url).resize(300,300).placeholder(R.drawable.def_user).error(R.drawable.def_user).into(holder.nik);
+//            }
         }
         if (ulangtahun.getName() != null){
             holder.name.setText(ulangtahun.getName());

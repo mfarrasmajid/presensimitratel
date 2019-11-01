@@ -18,4 +18,11 @@
         <item name="colorAccent">@color/colorWhite</item>
     </style>
 
+    <style name="AbsenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/colorBlack20</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/slide_absen</item>
+    </style>
+
 </resources>
