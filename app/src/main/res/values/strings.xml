@@ -8,4 +8,5 @@
     <!--    <string name="profile_image">http://api.mitratel.co.id/rest/presensi/img/</string>-->
     <string name="profile_image">https://presensi.mitratel.co.id/images/</string>
     <string name="api_client_1">http://api.mitratel.co.id/rest/presensi/ci/index.php/</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

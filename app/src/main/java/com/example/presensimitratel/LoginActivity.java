@@ -16,9 +16,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,6 +33,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +55,7 @@ import com.example.presensimitratel.Model.GetLogin;
 import com.example.presensimitratel.Model.PostLogin;
 import com.example.presensimitratel.Rest.ApiClient;
 import com.example.presensimitratel.Rest.ApiInterface;
+import com.google.android.material.textfield.TextInputLayout;
 
 import static android.service.autofill.Validators.or;
 import static android.view.View.INVISIBLE;

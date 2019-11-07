@@ -3,4 +3,8 @@
     android:duration="300"
     android:slideEdge="bottom"
     >
+    <targets>
+        <target android:excludeId="@android:id/statusBarBackground" />
+        <target android:excludeId="@android:id/navigationBarBackground" />
+    </targets>
 </slide>

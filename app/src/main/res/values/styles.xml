@@ -18,11 +18,26 @@
         <item name="colorAccent">@color/colorWhite</item>
     </style>
 
-    <style name="AbsenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AbsenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/colorBlack20</item>
+        <item name="android:windowBackground">@color/colorBlack50</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--        <item name="android:windowIsFloating">true</item>-->
+<!--        <item name="android:backgroundDimEnabled">false</item>-->
+        <item name="android:fontFamily">@font/avenir</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowEnterTransition">@transition/slide_absen</item>
+    </style>
+
+    <style name="KeteranganTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:fontFamily">@font/avenir</item>
     </style>
 
 </resources>
