@@ -25,6 +25,11 @@ public class SharedPrefManager {
 
     public static final String SP_SUDAH_LOGIN = "spSudahLogin";
 
+    public static final String SP_KET_ABSEN = "spKetAbsen";
+    public static final String SP_DATE_ABSEN = "spDateAbsen";
+    public static final String SP_MASUK_PULANG = "spMasukPulang";
+
+
     SharedPreferences sp;
     SharedPreferences.Editor spEditor;
 
@@ -110,4 +115,17 @@ public class SharedPrefManager {
     public Boolean getSPSudahLogin(){
         return sp.getBoolean(SP_SUDAH_LOGIN, false);
     }
+
+    public String getSPKetAbsen(){
+        return sp.getString(SP_KET_ABSEN, "");
+    }
+
+    public String getSPDateAbsen(){
+        return sp.getString(SP_DATE_ABSEN, "");
+    }
+
+    public String getSPMasukPulang(){
+        return sp.getString(SP_MASUK_PULANG, "");
+    }
+
 }

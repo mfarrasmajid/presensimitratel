@@ -310,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     public void retrieveAbsenStatus (SharedPrefManager sharedPrefManager){
         String nik_tg = sharedPrefManager.getSPNIKTG();
         mApiInterface = ApiClient.getClient(getString(R.string.api_client_1)).create(ApiInterface.class);
@@ -351,8 +352,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if (dataStatusList.get(0).getNote() != null){
                         absenButton.setText(dataStatusList.get(0).getNote());
+                        if (dataStatusList.get(0).getNote().equals("Absen Masuk")){
+                            sharedPrefManager.saveSPString(SharedPrefManager.SP_MASUK_PULANG,"MASUK");
+                        } else if (dataStatusList.get(0).getNote().equals("Absen Pulang")){
+                            sharedPrefManager.saveSPString(SharedPrefManager.SP_MASUK_PULANG,"PULANG");
+                        } else {
+                            sharedPrefManager.saveSPString(SharedPrefManager.SP_MASUK_PULANG,"MASUK");
+                        }
                     } else {
                         absenButton.setText("Selamat Istirahat");
+                        sharedPrefManager.saveSPString(SharedPrefManager.SP_MASUK_PULANG,"MASUK");
                     }
                 } else {
                     List<DataStatus> dataStatusList = response.body().getListDataStatus();

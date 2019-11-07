@@ -1,11 +1,14 @@
 package com.example.presensimitratel.Rest;
 
 import com.example.presensimitratel.Model.GetAbsenData;
+import com.example.presensimitratel.Model.GetAbsenRequest;
 import com.example.presensimitratel.Model.GetAbsenStatus;
 import com.example.presensimitratel.Model.GetLogin;
 import com.example.presensimitratel.Model.GetMonitoring;
 import com.example.presensimitratel.Model.GetUlangTahun;
 import com.example.presensimitratel.Model.PostLogin;
+
+import org.json.JSONArray;
 
 import java.util.HashMap;
 
@@ -31,5 +34,6 @@ public interface ApiInterface {
     Call<GetUlangTahun> getUlangTahun(@QueryMap HashMap<String, String> params);
     @GET("api/absenstatus")
     Call<GetAbsenStatus> getAbsenStatus(@QueryMap HashMap<String, String> params);
-
+    @GET("api/absenrequest")
+    Call<GetAbsenRequest> getAbsenRequest(@QueryMap HashMap<String, String> params);
 }

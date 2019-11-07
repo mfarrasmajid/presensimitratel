@@ -78,7 +78,7 @@
                         android:id="@+id/jam"
                         android:layout_height="50dp"
                         android:layout_width="0dp"
-                        android:text="15:00:00"
+                        android:text="--:--:--"
                         android:gravity="center"
                         android:textSize="20sp"
                         android:background="@drawable/border_left"
@@ -93,7 +93,8 @@
                     app:errorEnabled="true"
                     android:hint="Keterangan Terlambat"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:layout_constraintTop_toBottomOf="@id/jamFrame">
+                    app:layout_constraintTop_toBottomOf="@id/jamFrame"
+                    android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/alasan"
