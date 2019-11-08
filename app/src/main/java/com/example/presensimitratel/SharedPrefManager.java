@@ -29,6 +29,14 @@ public class SharedPrefManager {
     public static final String SP_DATE_ABSEN = "spDateAbsen";
     public static final String SP_MASUK_PULANG = "spMasukPulang";
 
+    public static final String SP_LAT_KANTOR = "spLatKantor";
+    public static final String SP_LONG_KANTOR = "spLongKantor";
+    public static final String SP_LAT = "spLat";
+    public static final String SP_LONG = "spLong";
+
+    public static final String SP_DISTANCE = "spDistance";
+
+
 
     SharedPreferences sp;
     SharedPreferences.Editor spEditor;
@@ -126,6 +134,26 @@ public class SharedPrefManager {
 
     public String getSPMasukPulang(){
         return sp.getString(SP_MASUK_PULANG, "");
+    }
+
+    public String getSPLatKantor(){
+        return sp.getString(SP_LAT_KANTOR, "");
+    }
+
+    public String getSPLat(){
+        return sp.getString(SP_LAT, "");
+    }
+
+    public String getSPLongKantor(){
+        return sp.getString(SP_LONG_KANTOR, "");
+    }
+
+    public String getSPLong(){
+        return sp.getString(SP_LONG, "");
+    }
+
+    public String getSpDistance(){
+        return sp.getString(SP_DISTANCE, "");
     }
 
 }

@@ -92,11 +92,12 @@ public class MainActivity extends AppCompatActivity {
     UlangTahunAdapter ulangTahunAdapter;
     private Activity activity;
     private Context context;
+    SharedPrefManager sharedPrefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPrefManager sharedPrefManager;
+
         sharedPrefManager = new SharedPrefManager(this);
         if (!sharedPrefManager.getSPSudahLogin()){
             //Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle();
@@ -142,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
                 //Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle();
                 //startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK), bundle);
                 //startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                startActivity(new Intent(context, MapsActivity.class),
-                        ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+                startActivityForResult(new Intent(context, MapsActivity.class),1);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_up);
                 //finish();
             }
         });
@@ -165,6 +166,23 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+
+            if(resultCode == RESULT_OK){
+                Toast.makeText(getApplicationContext(), data.getExtras().getString("result"), Toast.LENGTH_LONG).show();
+                retrieveAbsenData(sharedPrefManager);
+                retrieveAbsenStatus(sharedPrefManager);
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Do nothing?
+            }
+        }
+    }//onActivityResult
+
     public void animateElement(){
         final Animation slideUp = AnimationUtils.loadAnimation(this,R.anim.slide_up);
         CircleImageView element1 = findViewById(R.id.profile_image);
@@ -402,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetAbsenStatus> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -543,7 +561,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetAbsenData> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -592,7 +610,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetMonitoring> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -627,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GetUlangTahun> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(),"System Error, GET API Failed",Toast.LENGTH_LONG).show();
             }
         });
     }
