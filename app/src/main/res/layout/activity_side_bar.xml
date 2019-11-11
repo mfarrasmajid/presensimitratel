@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".SideBarActivity">
+
+    <View
+        android:id="@+id/backMenu"
+        android:onClick="goBack"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="#fafafa"
+        android:focusable="true"
+        android:elevation="2dp"
+        android:padding="30dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NAME"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/name"
+            android:textSize="30sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="email"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            android:textSize="15sp"
+            android:id="@+id/email"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/home"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/email"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="?android:attr/borderlessButtonStyle"
+        android:text="Home"
+        android:layout_marginTop="40dp"
+        android:drawableStart="@drawable/drawable_home"/>
+
+    <View android:id="@+id/separator1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc"
+        app:layout_constraintTop_toBottomOf="@id/home"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/report"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/separator1"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="?android:attr/borderlessButtonStyle"
+        android:text="Report"
+        android:drawableStart="@drawable/drawable_report"/>
+
+    <View android:id="@+id/separator2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc"
+        app:layout_constraintTop_toBottomOf="@id/report"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/profile_change"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/separator2"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="?android:attr/borderlessButtonStyle"
+        android:text="Edit Profile"
+        android:drawableStart="@drawable/drawable_profile"/>
+
+    <View android:id="@+id/separator3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc"
+        app:layout_constraintTop_toBottomOf="@id/profile_change"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/logout"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/separator3"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="?android:attr/borderlessButtonStyle"
+        android:text="Logout"
+        android:drawableStart="@drawable/drawable_logout"/>
+
+    <View android:id="@+id/separator4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc"
+        app:layout_constraintTop_toBottomOf="@id/logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

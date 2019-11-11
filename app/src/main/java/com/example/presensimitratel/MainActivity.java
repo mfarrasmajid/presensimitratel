@@ -112,19 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
 //        animateElement();
 
-        CircleImageView profileImage= findViewById(R.id.profile_image);
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                sharedPrefManager.saveSPBoolean(SharedPrefManager.SP_SUDAH_LOGIN, false);
-                //Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle();
-                //startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK), bundle);
-                startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                finish();
-            }
-        });
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -140,12 +127,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                //Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle();
-                //startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK), bundle);
-                //startActivity(new Intent(MainActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                startActivityForResult(new Intent(context, MapsActivity.class),1);
-                overridePendingTransition(R.anim.slide_up, R.anim.slide_up);
-                //finish();
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle();
+                startActivityForResult(new Intent(context, MapsActivity.class),1, bundle);
+            }
+        });
+
+        Button menu= findViewById(R.id.menu);
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle();
+                startActivityForResult(new Intent(context, SideBarActivity.class),2, bundle);
             }
         });
 
@@ -176,6 +169,23 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), data.getExtras().getString("result"), Toast.LENGTH_LONG).show();
                 retrieveAbsenData(sharedPrefManager);
                 retrieveAbsenStatus(sharedPrefManager);
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Do nothing?
+            }
+        }
+        if (requestCode == 2){
+            if(resultCode == RESULT_OK){
+                if (data.getExtras().getString("page").equals("home")){
+                    retrieveAbsenData(sharedPrefManager);
+                    retrieveKaryawanData(sharedPrefManager);
+                    retrievePrivilege(sharedPrefManager);
+                    retrieveMonitoringData(sharedPrefManager);
+                    retrieveUlangTahunData(sharedPrefManager);
+                    retrieveAbsenStatus(sharedPrefManager);
+                } else if (data.getExtras().getString("page").equals("logout")){
+                    finish();
+                }
             }
             if (resultCode == RESULT_CANCELED) {
                 //Do nothing?
@@ -522,17 +532,24 @@ public class MainActivity extends AppCompatActivity {
                     if (dataAbsen.get(0).getKeteranganIn() != null) {
                         if (dataAbsen.get(0).getKeteranganIn().equals("OK")){
                             keteranganFrame.setBackgroundColor(getResources().getColor(R.color.colorBlue));
+                            keterangan.setText("OK");
                         } else if (dataAbsen.get(0).getKeteranganIn().equals("LT")) {
                             keteranganFrame.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                            if (dataAbsen.get(0).getCatatanIn() != null){
+                                keterangan.setText(dataAbsen.get(0).getCatatanIn());
+                            } else {
+                                keterangan.setText("");
+                            }
                         } else {
                             keteranganFrame.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                            if (dataAbsen.get(0).getCatatanIn() != null){
+                                keterangan.setText(dataAbsen.get(0).getCatatanIn());
+                            } else {
+                                keterangan.setText("");
+                            }
                         }
                     } else {
                         keteranganFrame.setBackgroundColor(getResources().getColor(R.color.colorBlue));
-                    }
-                    if (dataAbsen.get(0).getCatatanIn() != null){
-                        keterangan.setText(dataAbsen.get(0).getCatatanIn());
-                    } else {
                         keterangan.setText("");
                     }
                 } else {
